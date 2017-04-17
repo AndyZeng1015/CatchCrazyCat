@@ -5,13 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.zyn.catchcrazycat.activity.MainActivity;
 import com.zyn.catchcrazycat.bean.Dot;
@@ -49,6 +46,8 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
 
     private Random mRandom;
     private Context mContext;
+
+    private static int stepCount = 0;//用于记录使用了多少步
 
     private SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
         @Override
@@ -115,7 +114,7 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
     }
 
     //初始化游戏界面
-    private void initGame() {
+    public void initGame() {
         //让所有圆圈都呈现可点击状态
         for (int x = 0; x < ROW; x++) {
             for (int y = 0; y < COL; y++) {
@@ -261,18 +260,26 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
                 if (matrix[x][y].getStatus() == STATUS_OFF) {
                     matrix[x][y].setStatus(STATUS_ON);
                     //点击完成修改后，先判断游戏状态
-                    Log.e("ZYN", "游戏状态："+getGameStatus());
                     if (getGameStatus() == GAME_CONDUCT) {
+                        stepCount ++;
                         moveCat();
                     } else if (getGameStatus() == GAME_FAIL) {
-                        Toast.makeText(mContext, "游戏失败", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "游戏失败", Toast.LENGTH_SHORT).show();
+                        FailGameDialog failGameDialog = new FailGameDialog();
+                        failGameDialog.show(((MainActivity)mContext).getSupportFragmentManager(), "failGameDialog");
                     } else if (getGameStatus() == GAME_SUCCESS) {
-                        Toast.makeText(mContext, "游戏成功", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "游戏成功", Toast.LENGTH_SHORT).show();
+                        SuccessGameDialog successGameDialog = new SuccessGameDialog();
+                        successGameDialog.show(((MainActivity)mContext).getSupportFragmentManager(), "successGameDialog");
                     }
                     redraw();
                 }
             }
         }
         return true;
+    }
+
+    public static int getStepCount(){
+        return stepCount;
     }
 }

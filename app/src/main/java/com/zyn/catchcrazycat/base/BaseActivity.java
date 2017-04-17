@@ -4,10 +4,11 @@ package com.zyn.catchcrazycat.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.zyn.catchcrazycat.R;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected BaseActivity mContext;
 

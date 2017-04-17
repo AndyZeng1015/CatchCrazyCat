@@ -20,23 +20,23 @@
 
         <Button
             android:id="@+id/btn_start_game"
-            android:layout_width="98dp"
-            android:layout_height="41dp"
+            android:layout_width="117.6dp"
+            android:layout_height="49.2dp"
             android:background="@drawable/start_game_btn"/>
 
         <Button
             android:id="@+id/btn_diff_select"
-            android:layout_width="98dp"
-            android:layout_height="41dp"
+            android:layout_width="117.6dp"
+            android:layout_height="49.2dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/diff_select_btn"/>
 
-        <Button
-            android:id="@+id/btn_record_rank"
-            android:layout_width="98dp"
-            android:layout_height="41dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/record_rank_btn"/>
+        <!--<Button-->
+            <!--android:id="@+id/btn_record_rank"-->
+            <!--android:layout_width="117.6dp"-->
+            <!--android:layout_height="49.2dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/record_rank_btn"/>-->
 
     </LinearLayout>
 

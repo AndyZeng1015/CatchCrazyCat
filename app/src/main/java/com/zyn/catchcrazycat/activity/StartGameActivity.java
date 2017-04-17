@@ -22,7 +22,7 @@ public class StartGameActivity extends BaseActivity {
 
     private Button btn_start_game;
     private Button btn_diff_select;
-    private Button btn_record_rank;
+//    private Button btn_record_rank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +49,19 @@ public class StartGameActivity extends BaseActivity {
         });
 
         //记录排名
-        btn_record_rank.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        btn_record_rank.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
     }
 
     private void initView() {
         setContentView(R.layout.activity_start_game);
         btn_start_game = (Button) findViewById(R.id.btn_start_game);
         btn_diff_select = (Button) findViewById(R.id.btn_diff_select);
-        btn_record_rank = (Button) findViewById(R.id.btn_record_rank);
+//        btn_record_rank = (Button) findViewById(R.id.btn_record_rank);
     }
 
     private static long lastPressTime = 0;

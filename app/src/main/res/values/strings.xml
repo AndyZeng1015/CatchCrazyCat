@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">围住神经猫</string>
+    <string name="with_step">您用%s步抓住了神经猫</string>
+    <string name="with_ranking">神经全国排名%s位</string>
+    <string name="with_per">击败了精神病院%s的精神病患者</string>
+    <string name="with_title">获得称号：%s</string>
 </resources>

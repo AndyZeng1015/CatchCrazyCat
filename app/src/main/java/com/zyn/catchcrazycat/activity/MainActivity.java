@@ -21,8 +21,14 @@ import com.zyn.catchcrazycat.util.DensityUtil;
 public class MainActivity extends BaseActivity {
 
     private RelativeLayout rl_content;
+    private RelativeLayout rl_main_content;
 
     public static MainActivity instance;
+
+    private int mScreenWidth = 0;
+    private int mScreenHeight = 0;
+
+    private Playground mPlayground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +41,26 @@ public class MainActivity extends BaseActivity {
     private void initData() {
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
-        int screenWidth = point.x;//屏幕的宽度
+        mScreenWidth = point.x;//屏幕的宽度
+        mScreenHeight = point.y;//屏幕的高度
 
-        int ll_Length = screenWidth - DensityUtil.dip2px(mContext, 16) * 2;//LinearLayout的宽度和高度
+        int rl_Length = mScreenWidth - DensityUtil.dip2px(mContext, 16) * 2;//LinearLayout的宽度和高度
 
         ViewGroup.LayoutParams layoutParams = rl_content.getLayoutParams();
-        layoutParams.width = ll_Length;
-        layoutParams.height = ll_Length;//此处高度应该比宽度小，但是由于整型的原因，如果减小会小很多，这次忽略
+        layoutParams.width = rl_Length;
+        layoutParams.height = rl_Length;//此处高度应该比宽度小，但是由于整型的原因，如果减小会小很多，这次忽略
         rl_content.setLayoutParams(layoutParams);
 
-        Playground playground = new Playground(mContext);
+        mPlayground = new Playground(mContext);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        rl_content.addView(playground, params);
+        rl_content.addView(mPlayground, params);
 
     }
 
     private void initView() {
         setContentView(R.layout.activity_main);
         rl_content = (RelativeLayout) findViewById(R.id.rl_content);
+        rl_main_content = (RelativeLayout) findViewById(R.id.rl_main_content);
     }
 
     public static MainActivity getInstance(){
@@ -66,17 +74,18 @@ public class MainActivity extends BaseActivity {
         int x = cat.getX();
         int y = cat.getY();
         catBg = new ImageView(mContext);
+        catBg.setScaleType(ImageView.ScaleType.FIT_CENTER);
         catBg.setBackgroundResource(R.drawable.cat_bg);
         AnimationDrawable drawable = (AnimationDrawable) catBg.getBackground();
         drawable.start();
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100,170);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 150);
         if(y % 2 == 0){
-            layoutParams.leftMargin = (int) (x * Playground.WIDTH + Playground.WIDTH / 2);
+            layoutParams.leftMargin = (int) (x * Playground.WIDTH + Playground.WIDTH / 2 + ((mScreenWidth - rl_content.getLayoutParams().width)/2));
         }else{
-            layoutParams.leftMargin = (int) (x * Playground.WIDTH);
+            layoutParams.leftMargin = (int) (x * Playground.WIDTH + ((mScreenWidth - rl_content.getLayoutParams().width)/2));
         }
-        layoutParams.topMargin = (int)((y * Playground.WIDTH) - 170 + Playground.WIDTH / 2);
-        rl_content.addView(catBg, layoutParams);
+        layoutParams.topMargin = (int)((y * Playground.WIDTH) - 150 + Playground.WIDTH / 2) + (mScreenHeight - rl_content.getLayoutParams().height - DensityUtil.dip2px(mContext, 60));
+        rl_main_content.addView(catBg, layoutParams);
     }
 
     //移动猫的动图
@@ -89,17 +98,30 @@ public class MainActivity extends BaseActivity {
             int x = cat.getX();
             int y = cat.getY();
             if(y % 2 == 0){
-                layoutParams.leftMargin = (int) (x * Playground.WIDTH + Playground.WIDTH / 2);
+                layoutParams.leftMargin = (int) (x * Playground.WIDTH + Playground.WIDTH / 2  + ((mScreenWidth - rl_content.getLayoutParams().width)/2));
             }else{
-                layoutParams.leftMargin = (int) (x * Playground.WIDTH);
+                layoutParams.leftMargin = (int) (x * Playground.WIDTH  + ((mScreenWidth - rl_content.getLayoutParams().width)/2) );
             }
-            layoutParams.topMargin = (int)((y * Playground.WIDTH) - 170 + Playground.WIDTH / 2);
+            layoutParams.topMargin = (int)((y * Playground.WIDTH) - 150 + Playground.WIDTH / 2) + (mScreenHeight - rl_content.getLayoutParams().height - DensityUtil.dip2px(mContext, 60));
             catBg.setLayoutParams(layoutParams);
         }
     }
 
     //修改猫的动图
     public void changeCatBg(){
+//        if(catBg != null){
+//            catBg.setBackgroundResource(R.drawable);
+//        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        catBg = null;
+    }
+
+    public void startNewGame(){
+        mPlayground.initGame();
+        mPlayground.redraw();
     }
 }

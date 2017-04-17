@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fail_dialog_bg"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="你没有抓住神！经！猫！！！"
+                android:textColor="#FE845D"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="精神病院长又发神经了！"
+                android:textColor="#3D3D3D"
+                android:textSize="22sp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <Button
+            android:id="@+id/btn_alert_diff"
+            android:layout_width="137.2dp"
+            android:layout_height="59dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/alert_diff"/>
+
+        <Button
+            android:id="@+id/btn_once_again"
+            android:layout_width="137.2dp"
+            android:layout_height="59dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/once_again"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
