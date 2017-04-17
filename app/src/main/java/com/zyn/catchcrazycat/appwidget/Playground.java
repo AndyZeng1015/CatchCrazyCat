@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.zyn.catchcrazycat.activity.MainActivity;
 import com.zyn.catchcrazycat.bean.Dot;
+import com.zyn.catchcrazycat.util.SharedPreferencesUtils;
 
 import java.util.Random;
 import java.util.Vector;
@@ -47,7 +48,7 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
     private Random mRandom;
     private Context mContext;
 
-    private static int stepCount = 0;//用于记录使用了多少步
+    private static int stepCount = 1;//用于记录使用了多少步
 
     private SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
         @Override
@@ -140,16 +141,23 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
 
     //猫的移动
     private void moveCat() {
-        //获取到猫可以移动的方向
-        Vector<Dot> dots = new Vector<Dot>();
-        for (int i = 0; i < 6; i++) {
-            if (getNearbyDot(cat, i).getStatus() == STATUS_OFF) {
-                dots.add(getNearbyDot(cat, i));
+        String title = SharedPreferencesUtils.getString(mContext, "diff_type", "欢乐模式");
+        if(title.equals("欢乐模式")){
+            //获取到猫可以移动的方向
+            Vector<Dot> dots = new Vector<Dot>();
+            for (int i = 0; i < 6; i++) {
+                if (getNearbyDot(cat, i).getStatus() == STATUS_OFF) {
+                    dots.add(getNearbyDot(cat, i));
+                }
             }
+            cat.setStatus(STATUS_OFF);
+            cat = dots.get(0);
+            cat.setStatus(STATUS_IN);
+        }else if(title.equals("普通模式")){
+
+        }else if(title.equals("烧脑模式")){
+
         }
-        cat.setStatus(STATUS_OFF);
-        cat = dots.get(0);
-        cat.setStatus(STATUS_IN);
     }
 
     //判断游戏的状态
@@ -281,5 +289,9 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
 
     public static int getStepCount(){
         return stepCount;
+    }
+
+    public static void initStepCount(){
+        stepCount = 1;
     }
 }

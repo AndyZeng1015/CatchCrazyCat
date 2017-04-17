@@ -6,10 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.zyn.catchcrazycat.Config.Contast;
 import com.zyn.catchcrazycat.R;
@@ -17,11 +19,13 @@ import com.zyn.catchcrazycat.appwidget.Playground;
 import com.zyn.catchcrazycat.base.BaseActivity;
 import com.zyn.catchcrazycat.bean.Dot;
 import com.zyn.catchcrazycat.util.DensityUtil;
+import com.zyn.catchcrazycat.util.SharedPreferencesUtils;
 
 public class MainActivity extends BaseActivity {
 
     private RelativeLayout rl_content;
     private RelativeLayout rl_main_content;
+    private TextView tv_diff_change;
 
     public static MainActivity instance;
 
@@ -36,6 +40,16 @@ public class MainActivity extends BaseActivity {
         instance = this;
         initView();
         initData();
+        initListener();
+    }
+
+    private void initListener() {
+        tv_diff_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void initData() {
@@ -55,12 +69,15 @@ public class MainActivity extends BaseActivity {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         rl_content.addView(mPlayground, params);
 
+        String title = SharedPreferencesUtils.getString(mContext, "diff_type", "欢乐模式");
+        tv_diff_change.setText(title);
     }
 
     private void initView() {
         setContentView(R.layout.activity_main);
         rl_content = (RelativeLayout) findViewById(R.id.rl_content);
         rl_main_content = (RelativeLayout) findViewById(R.id.rl_main_content);
+        tv_diff_change = (TextView) findViewById(R.id.tv_diff_change);
     }
 
     public static MainActivity getInstance(){

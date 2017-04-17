@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.zyn.catchcrazycat.R;
+import com.zyn.catchcrazycat.appwidget.DifferentChangeDialog;
 import com.zyn.catchcrazycat.base.BaseActivity;
 import com.zyn.catchcrazycat.base.BaseApplication;
 import com.zyn.catchcrazycat.util.ToastUtil;
@@ -44,7 +45,8 @@ public class StartGameActivity extends BaseActivity {
         btn_diff_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DifferentChangeDialog differentChangeDialog = new DifferentChangeDialog();
+                differentChangeDialog.show(getSupportFragmentManager(), "differentChangeDialog");
             }
         });
 

@@ -16,4 +16,15 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_diff_change"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:text="欢乐\n模式"
+        android:gravity="center"
+        android:textColor="#fff"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/diff_bg"/>
+
 </RelativeLayout>

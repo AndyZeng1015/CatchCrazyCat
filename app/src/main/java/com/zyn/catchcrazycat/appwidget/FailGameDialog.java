@@ -47,7 +47,8 @@ public class FailGameDialog extends AppCompatDialogFragment implements DialogInt
         btn_alert_diff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DifferentChangeDialog differentChangeDialog = new DifferentChangeDialog();
+                differentChangeDialog.show(getFragmentManager(), "differentChangeDialog");
             }
         });
 
@@ -55,6 +56,7 @@ public class FailGameDialog extends AppCompatDialogFragment implements DialogInt
             @Override
             public void onClick(View v) {
                 getDialog().dismiss();
+                Playground.initStepCount();
                 ((MainActivity)getActivity()).startNewGame();
             }
         });

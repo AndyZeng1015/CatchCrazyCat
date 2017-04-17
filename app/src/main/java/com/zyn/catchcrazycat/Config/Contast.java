@@ -8,6 +8,9 @@ package com.zyn.catchcrazycat.Config;
  */
 
 public class Contast {
+
+    public static final String SP_NAME = "catchCrazyCat";
+
     public static final int STATUS_ON = 1; //圆圈已点击
     public static final int STATUS_OFF = 0; //圆圈为可点击状态
     public static final int STATUS_IN = 9; //猫在本圆圈上
