@@ -13,11 +13,13 @@ public class Dot {
     private int x;
     private int y;
     private int status;
+    private int value;//存放最短路径时的值
 
     public Dot(int x, int y) {
         this.x = x;
         this.y = y;
         status = STATUS_OFF;//默认为可点击的状态
+        value = -110;//默认为-110
     }
 
     public int getX() {
@@ -49,4 +51,11 @@ public class Dot {
         this.y = y;
     }
 
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

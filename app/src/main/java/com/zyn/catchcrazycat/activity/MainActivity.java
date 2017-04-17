@@ -126,9 +126,11 @@ public class MainActivity extends BaseActivity {
 
     //修改猫的动图
     public void changeCatBg(){
-//        if(catBg != null){
-//            catBg.setBackgroundResource(R.drawable);
-//        }
+        if(catBg != null){
+            catBg.setBackgroundResource(R.drawable.cat_crash_bg);
+            AnimationDrawable drawable = (AnimationDrawable) catBg.getBackground();
+            drawable.start();
+        }
     }
 
     @Override
@@ -138,6 +140,9 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startNewGame(){
+        catBg.setBackgroundResource(R.drawable.cat_bg);
+        AnimationDrawable drawable = (AnimationDrawable) catBg.getBackground();
+        drawable.start();
         mPlayground.initGame();
         mPlayground.redraw();
     }

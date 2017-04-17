@@ -5,11 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.zyn.catchcrazycat.Config.Contast;
 import com.zyn.catchcrazycat.activity.MainActivity;
 import com.zyn.catchcrazycat.bean.Dot;
 import com.zyn.catchcrazycat.util.SharedPreferencesUtils;
@@ -142,7 +144,7 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
     //猫的移动
     private void moveCat() {
         String title = SharedPreferencesUtils.getString(mContext, "diff_type", "欢乐模式");
-        if(title.equals("欢乐模式")){
+        if (title.equals("欢乐模式")) {//固定移动方向，无选择
             //获取到猫可以移动的方向
             Vector<Dot> dots = new Vector<Dot>();
             for (int i = 0; i < 6; i++) {
@@ -153,16 +155,136 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
             cat.setStatus(STATUS_OFF);
             cat = dots.get(0);
             cat.setStatus(STATUS_IN);
-        }else if(title.equals("普通模式")){
+        } else if (title.equals("普通模式")) {//最短路径算法
+            //先计算每个可移动点的路径值，选择最短的走
+            calculateShortestPath();
+            Vector<Dot> dots = new Vector<Dot>();
+            for (int i = 0; i < 6; i++) {
+                if (getNearbyDot(cat, i).getStatus() == STATUS_OFF) {
+                    dots.add(getNearbyDot(cat, i));
+                }
+            }
 
-        }else if(title.equals("烧脑模式")){
+            int minValue = 110;//记录最小的值
+            int index = 0;//记录最小值是第几个
+            for (int i = 0; i < dots.size(); i++) {
+                if (minValue > dots.get(i).getValue()) {
+                    minValue = dots.get(i).getValue();
+                    index = i;
+                }
+            }
 
+            if(minValue == -110){
+                //表示周围都被堵死了
+                MainActivity.getInstance().changeCatBg();
+            }
+
+            cat.setStatus(STATUS_OFF);
+            cat = dots.get(index);
+            cat.setStatus(STATUS_IN);
+
+        } else if (title.equals("烧脑模式")) {
+
+        }
+    }
+
+    //计算图中每个点的值
+    private void calculateShortestPath() {
+
+        //清空之前的值
+        for (int x = 0; x < ROW; x++) {
+            for (int y = 0; y < COL; y++) {
+                matrix[x][y].setValue(-110);
+            }
+        }
+
+        //左上角
+        for (int i = 0; i < Contast.ROW; i++) {
+            for (int j = 0; j < Contast.COL; j++) {
+                calculateOneOverl(matrix[j][i]);//计算第一行->最后一行
+                calculateOneOverl(matrix[i][j]);//计算第一列->最后一列
+            }
+        }
+
+        //右上角
+        for (int i = 0; i < Contast.ROW; i++) {
+            for (int j = 0; j < Contast.COL; j++) {
+                calculateOneOverl(matrix[(Contast.COL - 1) - j][i]);//计算第一行->最后一行
+                calculateOneOverl(matrix[i][j]);//计算第一列->最后一列
+            }
+        }
+
+        //右下角
+        for (int i = Contast.ROW - 1; i >= 0; i--) {
+            for (int j = Contast.COL - 1; j >= 0 ; j--) {
+                calculateOneOverl(matrix[j][i]);
+                calculateOneOverl(matrix[i][j]);
+            }
+        }
+
+        //左下角
+        for (int i = 0; i < Contast.ROW; i++) {
+            for (int j = 0; j < Contast.COL; j++) {
+                calculateOneOverl(matrix[j][i]);
+                calculateOneOverl(matrix[i][(Contast.COL - 1) - j]);
+            }
+        }
+    }
+
+    //为指定点设置值
+    private void calculateOneOverl(Dot dot) {
+        if (dot.getStatus() == STATUS_ON) {
+            //表示为障碍物
+            dot.setValue(110);
+            return;
+        }
+
+        if (dot.getStatus() == STATUS_IN) {
+            //表示为猫的位置
+            dot.setValue(888);
+            return;
+        }
+
+        if (dot.getX() * dot.getY() == 0 || dot.getX() == Contast.ROW - 1 || dot.getY() == Contast.COL - 1) {
+            //表示为边界
+            dot.setValue(0);
+            return;
+        }
+
+        //到这里表示为中间的非猫非占有的点
+        Vector<Dot> dots = new Vector<Dot>();
+        for (int i = 0; i < 6; i++) {
+            Dot nearByDot = getNearbyDot(dot, i);
+            if (nearByDot.getStatus() == STATUS_OFF) {
+                dots.add(nearByDot);
+            }
+        }
+
+        if (dots.size() <= 0) {
+            //表示周围没有可用的点
+            dot.setValue(-110);
+            return;
+        } else {
+            int minValue = 110;
+            for (int i = 0; i < dots.size(); i++) {
+                if (dots.get(i).getValue() != -110 && dots.get(i).getValue() < minValue) {
+                    minValue = dots.get(i).getValue();
+                }
+            }
+            if(minValue == 110){
+                //说明该点周围都是没赋值的点，可能从外圈被围住了
+                dot.setValue(-110);
+                return;
+            }else{
+                dot.setValue(minValue + 1);
+                return;
+            }
         }
     }
 
     //判断游戏的状态
     private int getGameStatus() {
-        if (cat.getX() * cat.getY() == 0 || cat.getX() == ROW || cat.getY() == COL) {
+        if (cat.getX() * cat.getY() == 0 || cat.getX() == ROW - 1 || cat.getY() == COL - 1) {
             //表示猫的位置在边沿位置
             return GAME_FAIL;
         }
@@ -269,16 +391,16 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
                     matrix[x][y].setStatus(STATUS_ON);
                     //点击完成修改后，先判断游戏状态
                     if (getGameStatus() == GAME_CONDUCT) {
-                        stepCount ++;
+                        stepCount++;
                         moveCat();
                     } else if (getGameStatus() == GAME_FAIL) {
                         //Toast.makeText(mContext, "游戏失败", Toast.LENGTH_SHORT).show();
                         FailGameDialog failGameDialog = new FailGameDialog();
-                        failGameDialog.show(((MainActivity)mContext).getSupportFragmentManager(), "failGameDialog");
+                        failGameDialog.show(((MainActivity) mContext).getSupportFragmentManager(), "failGameDialog");
                     } else if (getGameStatus() == GAME_SUCCESS) {
                         //Toast.makeText(mContext, "游戏成功", Toast.LENGTH_SHORT).show();
                         SuccessGameDialog successGameDialog = new SuccessGameDialog();
-                        successGameDialog.show(((MainActivity)mContext).getSupportFragmentManager(), "successGameDialog");
+                        successGameDialog.show(((MainActivity) mContext).getSupportFragmentManager(), "successGameDialog");
                     }
                     redraw();
                 }
@@ -287,11 +409,11 @@ public class Playground extends SurfaceView implements View.OnTouchListener {
         return true;
     }
 
-    public static int getStepCount(){
+    public static int getStepCount() {
         return stepCount;
     }
 
-    public static void initStepCount(){
+    public static void initStepCount() {
         stepCount = 1;
     }
 }
